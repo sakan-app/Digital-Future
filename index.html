@@ -104,11 +104,11 @@ img[src$="logo.png"], .brand-logo {
       <div class="hero-search relative z-20 mt-7">
         <label class="block muted text-sm mb-3" for="globalSearch" data-i18n="searchLabel">ما الذي تريد إنجازه باستخدام الذكاء الاصطناعي؟</label>
         <div class="glass rounded-full p-2 flex items-center gap-3 shadow-2xl">
-          <span class="gold text-xl ps-3" aria-hidden="true">⌕</span><input id="globalSearch" class="flex-1 min-w-0 bg-transparent py-3 outline-none text-base placeholder:text-slate-500" type="search" autocomplete="off" placeholder="ابحث عن شركة أو أداة أو خدمة..." data-i18n-placeholder="searchPlaceholder" aria-label="Search AI companies and products"><button id="imageUploadButton" class="muted px-2 text-lg" type="button" aria-label="Bild auswählen" title="Bild auswählen">▧</button><input id="imageUpload" type="file" accept="image/*" class="hidden"><button id="voiceSearchButton" class="muted px-2 text-lg" type="button" aria-label="Sprachsuche starten" title="Sprachsuche starten">🎙</button><button id="searchClear" class="hidden muted px-2" aria-label="Clear search">×</button>
+          <span class="gold text-xl ps-3" aria-hidden="true">⌕</span><input id="globalSearch" class="flex-1 min-w-0 bg-transparent py-3 outline-none text-base placeholder:text-slate-500" type="search" autocomplete="off" placeholder="ابحث عن شركة أو أداة أو خدمة..." data-i18n-placeholder="searchPlaceholder" aria-label="Search AI companies and products" data-i18n-aria-label="searchInputLabel"><button id="imageUploadButton" class="muted px-2 text-lg" type="button" aria-label="Bild auswählen" title="Bild auswählen" data-i18n-aria-label="selectImage" data-i18n-title="selectImage">▧</button><input id="imageUpload" type="file" accept="image/*" class="hidden"><button id="voiceSearchButton" class="muted px-2 text-lg" type="button" aria-label="Sprachsuche starten" title="Sprachsuche starten" data-i18n-aria-label="voiceSearch" data-i18n-title="voiceSearch">🎙</button><button id="searchClear" class="hidden muted px-2" aria-label="Clear search" data-i18n-aria-label="clearSearch">×</button>
         </div>
-        <div id="searchResults" class="search-panel glass hidden p-3 text-start" role="listbox" aria-label="Search results"></div>
+        <div id="searchResults" class="search-panel glass hidden p-3 text-start" role="listbox" aria-label="Search results" data-i18n-aria-label="searchResultsLabel"></div>
         <p class="muted text-xs mt-3" data-i18n="searchHint">جرّب: ChatGPT، الترجمة، توليد الصور، البرمجة، أو حلول الأعمال.</p>
-        <div class="hero-actions"><button class="btn" data-open="explore"><span>🧭</span><span>Explore</span></button><button class="btn btn-primary" data-open="solutions"><span>🔑</span><span>Solutions</span></button></div>
+        <div class="hero-actions"><button class="btn" data-open="explore"><span>🧭</span><span data-i18n="explore">Explore</span></button><button class="btn btn-primary" data-open="solutions"><span>🔑</span><span data-i18n="solutions">Solutions</span></button></div>
       </div>
     </div>
   </section>
@@ -200,7 +200,12 @@ function handleCompanyLogoError(img,id){
  img.outerHTML=companyLogoFallback(companyId);
 }
 let lang='de';const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];const tx=k=>(i18n[lang]&&i18n[lang][k])||(i18n.de&&i18n.de[k])||k;
-i18n.de.heroSearchBrand='DIGITAL FUTURE';i18n.de.pageTitle='DIGITAL-FUTURE.AI | Das globale KI-Unternehmensverzeichnis';i18n.en.pageTitle='DIGITAL-FUTURE.AI | The Global AI Company Directory';i18n.ar.pageTitle='DIGITAL-FUTURE.AI | دليل شركات الذكاء الاصطناعي العالمي';
+i18n.de.heroSearchBrand='DIGITAL FUTURE';i18n.de.selectImage='Bild auswählen';i18n.en.selectImage='Choose an image';i18n.ar.selectImage='اختيار صورة';
+i18n.de.voiceSearch='Sprachsuche starten';i18n.en.voiceSearch='Start voice search';i18n.ar.voiceSearch='بدء البحث الصوتي';
+i18n.de.clearSearch='Suche löschen';i18n.en.clearSearch='Clear search';i18n.ar.clearSearch='مسح البحث';
+i18n.de.searchInputLabel='KI-Unternehmen und Produkte suchen';i18n.en.searchInputLabel='Search AI companies and products';i18n.ar.searchInputLabel='البحث عن شركات ومنتجات الذكاء الاصطناعي';
+i18n.de.searchResultsLabel='Suchergebnisse';i18n.en.searchResultsLabel='Search results';i18n.ar.searchResultsLabel='نتائج البحث';
+i18n.de.pageTitle='DIGITAL-FUTURE.AI | Das globale KI-Unternehmensverzeichnis';i18n.en.pageTitle='DIGITAL-FUTURE.AI | The Global AI Company Directory';i18n.ar.pageTitle='DIGITAL-FUTURE.AI | دليل شركات الذكاء الاصطناعي العالمي';
 i18n.de.pageDescription='Entdecken Sie führende KI-Unternehmen, Tools und offizielle Websites an einem Ort.';i18n.en.pageDescription='Discover leading AI companies, tools, and official websites in one place.';i18n.ar.pageDescription='اكتشف أبرز شركات الذكاء الاصطناعي وأدواتها ومواقعها الرسمية في مكان واحد.';
 i18n.en.heroSearchBrand='DIGITAL FUTURE';i18n.ar.heroSearchBrand='DIGITAL FUTURE';i18n.de.technologyWorld='Technologie-Welt';i18n.de.subscription='Abonnement';i18n.en.technologyWorld='Technology World';i18n.en.subscription='Subscription';i18n.ar.technologyWorld='عالم التكنولوجيا';i18n.ar.subscription='الاشتراك';
 function googleLanguageCode(code){const map={zh:'zh-CN',fa:'fa',ur:'ur',id:'id'};return map[code]||code}
@@ -271,10 +276,17 @@ function setLanguage(next){
   const translated=(i18n[lang]&&i18n[lang][key])||(i18n.de&&i18n.de[key]);
   if(translated!==undefined)el.innerHTML=translated;
  });
- $$('[data-i18n-placeholder]').forEach(el=>{
+ $('[data-i18n-placeholder]').forEach(el=>{
   const key=el.dataset.i18nPlaceholder;
   const translated=(i18n[lang]&&i18n[lang][key])||(i18n.de&&i18n.de[key]);
   if(translated!==undefined)el.placeholder=translated;
+ });
+ ['aria-label','title'].forEach(attribute=>{
+  $('[data-i18n-'+attribute+']').forEach(el=>{
+   const key=el.dataset['i18n'+attribute.split('-').map(x=>x[0].toUpperCase()+x.slice(1)).join('')];
+   const translated=(i18n[lang]&&i18n[lang][key])||(i18n.de&&i18n.de[key]);
+   if(translated!==undefined)el.setAttribute(attribute,translated);
+  });
  });
  $('#languageMenu').classList.add('hidden');
  $('#languageButton').setAttribute('aria-expanded','false');
