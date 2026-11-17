@@ -233,12 +233,34 @@ const worldLanguages=[
 ];
 function buildLanguageMenu(){const menu=$('#languageMenu');menu.innerHTML=worldLanguages.map(([code,label])=>'<button class="language-choice block w-full text-start p-2 rounded-lg hover:bg-white/5" data-lang="'+code+'">'+label+'</button>').join('');$$('.language-choice').forEach(button=>button.addEventListener('click',()=>setLanguage(button.dataset.lang)))}
 function detectBrowserLanguage(){
- // German is the permanent first-visit default. A deliberate user choice wins on later visits.
+ // An explicit choice always wins; otherwise use the browser's preferred supported locale.
+ const available=new Map(worldLanguages.map(([code])=>[code.toLowerCase(),code]));
+ const normalize=locale=>{
+  const value=String(locale||'').trim().replace('_','-');
+  if(!value)return null;
+  const lower=value.toLowerCase();
+  if(available.has(lower))return available.get(lower);
+  const parts=lower.split('-');
+  if(parts[0]==='zh'){
+   if(parts.includes('tw')||parts.includes('hk')||parts.includes('mo')||parts.includes('hant'))return available.get('zh-tw')||'de';
+   if(parts.includes('cn')||parts.includes('sg')||parts.includes('hans'))return available.get('zh-cn')||'de';
+  }
+  return available.get(parts[0])||null;
+ };
  try{
   const saved=localStorage.getItem('digitalFuture.language');
-  const available=new Set(worldLanguages.map(([code])=>code.toLowerCase()));
-  if(saved&&available.has(saved.toLowerCase()))return worldLanguages.find(([code])=>code.toLowerCase()===saved.toLowerCase())[0];
- }catch(error){/* Storage can be unavailable in private or restricted contexts. */}
+  const preferred=normalize(saved);
+  if(preferred)return preferred;
+ }catch(error){/* Storage may be unavailable in private or restricted contexts. */}
+ const preferences=[];
+ try{
+  if(Array.isArray(navigator.languages))preferences.push(...navigator.languages);
+  if(navigator.language)preferences.push(navigator.language);
+ }catch(error){/* Browser language information may be unavailable. */}
+ for(const locale of preferences){
+  const detected=normalize(locale);
+  if(detected)return detected;
+ }
  return 'de';
 }
 function googleLanguageCode(code){return code==='zh-TW'?'zh-TW':code==='zh-CN'?'zh-CN':code}
