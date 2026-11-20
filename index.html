@@ -55,7 +55,7 @@ img[src$="logo.png"], .brand-logo {
 <header class="sticky top-0 z-40 border-b border-slate-800/70 bg-[#060913]/85 backdrop-blur-xl">
   <div class="max-w-[1500px] mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
     <div class="relative">
-      <button id="languageButton" class="btn text-sm py-2" aria-haspopup="true" aria-expanded="false"><span id="languageCode">DE</span><span aria-hidden="true">▾</span></button>
+      <button id="languageButton" class="btn text-sm py-2" aria-haspopup="true" aria-expanded="false"><span id="languageFlag" aria-hidden="true">🇩🇪</span><span id="languageCode">DE</span><span aria-hidden="true">▾</span></button>
       <div id="languageMenu" class="glass hidden absolute top-12 start-0 rounded-xl p-2 min-w-48 max-h-80 overflow-y-auto z-50">
         <button class="language-choice block w-full text-start p-2 rounded-lg hover:bg-white/5" data-lang="de">🇩🇪 Deutsch</button>
         <button class="language-choice block w-full text-start p-2 rounded-lg hover:bg-white/5" data-lang="en">🇬🇧 English</button>
@@ -276,13 +276,13 @@ function setLanguage(next){
   const translated=(i18n[lang]&&i18n[lang][key])||(i18n.de&&i18n.de[key]);
   if(translated!==undefined)el.innerHTML=translated;
  });
- $('[data-i18n-placeholder]').forEach(el=>{
+ $$('[data-i18n-placeholder]').forEach(el=>{
   const key=el.dataset.i18nPlaceholder;
   const translated=(i18n[lang]&&i18n[lang][key])||(i18n.de&&i18n.de[key]);
   if(translated!==undefined)el.placeholder=translated;
  });
  ['aria-label','title'].forEach(attribute=>{
-  $('[data-i18n-'+attribute+']').forEach(el=>{
+  $$('[data-i18n-'+attribute+']').forEach(el=>{
    const key=el.dataset['i18n'+attribute.split('-').map(x=>x[0].toUpperCase()+x.slice(1)).join('')];
    const translated=(i18n[lang]&&i18n[lang][key])||(i18n.de&&i18n.de[key]);
    if(translated!==undefined)el.setAttribute(attribute,translated);
@@ -362,7 +362,7 @@ function openPayPalCheckout(){
  function setMode(hosted){$('#stripeHostedPanel').classList.toggle('hidden',!hosted);$('#stripeElementsPanel').classList.toggle('hidden',hosted);$('#stripeCheckoutMode').classList.toggle('btn-primary',hosted);$('#stripeElementsMode').classList.toggle('btn-primary',!hosted);if(!hosted)mountCard().catch(e=>$('#stripeElementsStatus').textContent=e.message);}
  $('#stripeCheckoutMode').addEventListener('click',()=>setMode(true));$('#stripeElementsMode').addEventListener('click',()=>setMode(false));
  $$('#checkoutPlans [data-plan]').forEach(btn=>btn.addEventListener('click',()=>{plan=paypalPlans.find(p=>p.id===btn.dataset.plan)||first;refresh();}));
- $( '#checkoutPlans a[href^="https://buy.stripe.com/"]' ).forEach(link=>link.addEventListener('click',e=>{if(!$('#checkoutConsent').checked){e.preventDefault();$('#stripeHostedStatus').textContent='Bitte bestätigen Sie zuerst die rechtlichen Bedingungen.';$('#checkoutConsent').focus();}}));
+ $$('#checkoutPlans a[href^="https://buy.stripe.com/"]' ).forEach(link=>link.addEventListener('click',e=>{if(!$('#checkoutConsent').checked){e.preventDefault();$('#stripeHostedStatus').textContent='Bitte bestätigen Sie zuerst die rechtlichen Bedingungen.';$('#checkoutConsent').focus();}}));
  $$('[data-legal]').forEach(btn=>btn.addEventListener('click',()=>openSimple(btn.dataset.legal)));
  $('#stripeHostedPay').addEventListener('click',e=>{if(!$('#checkoutConsent').checked){e.preventDefault();$('#stripeHostedStatus').textContent='Bitte bestätigen Sie zuerst die rechtlichen Bedingungen.';}});
  $('#stripeElementsPay').addEventListener('click',async()=>{if(!$('#checkoutConsent').checked){$('#stripeElementsStatus').textContent='Bitte bestätigen Sie zuerst die rechtlichen Bedingungen.';return;}const email=$('#stripeEmail').value.trim();if(!email||!$('#stripeEmail').checkValidity()){ $('#stripeEmail').reportValidity();return;}try{const s=await getStripe();await mountCard();$('#stripeElementsStatus').textContent='Kartendaten werden sicher bestätigt …';const setup=await post('/api/stripe/create-setup-intent',{planId:plan.id,email});const confirmed=await s.confirmCardSetup(setup.clientSecret,{payment_method:{card,billing_details:{email}}});if(confirmed.error)throw new Error(confirmed.error.message);const pm=confirmed.setupIntent&&confirmed.setupIntent.payment_method;if(!pm)throw new Error('Stripe hat keine Zahlungsmethode bestätigt.');const sub=await post('/api/stripe/create-subscription',{planId:plan.id,email,paymentMethodId:pm});if(sub.paymentIntentClientSecret){const paid=await s.confirmCardPayment(sub.paymentIntentClientSecret);if(paid.error)throw new Error(paid.error.message);if(!paid.paymentIntent||paid.paymentIntent.status!=='succeeded')throw new Error('Erste Zahlung noch nicht bestätigt.');}else if(!['active','trialing'].includes(sub.status))throw new Error('Abonnement nicht aktiv: '+sub.status);closeModal();showPaymentNotice('Stripe hat die Zahlung für '+plan.name+' bestätigt.',true);}catch(e){if($('#stripeElementsStatus'))$('#stripeElementsStatus').textContent=e.message||'Stripe-Zahlung fehlgeschlagen.';}});
