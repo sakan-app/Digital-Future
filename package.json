@@ -1,0 +1,8 @@
+{
+  "name": "digital-future",
+  "private": true,
+  "description": "digital-future.ai: static site plus Cloudflare Pages Functions",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.13.0"
+  }
+}
