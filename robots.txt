@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /tests/
+Disallow: /tools/
+Disallow: /security/
+Sitemap: https://digital-future.ai/sitemap.xml
