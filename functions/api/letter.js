@@ -170,7 +170,9 @@ export async function onRequestPost({ request, env }) {
       return json({ error: "not_configured" }, 503, origin);
     }
     if (error instanceof Anthropic.APIError) {
-      console.error("letter api: upstream error", error.status);
+      // Anthropic's error message describes the request (e.g. billing or a bad parameter), never the letter.
+      const detail = error.error && error.error.error ? error.error.error : {};
+      console.error("letter api: upstream error", error.status, detail.type, String(detail.message || "").slice(0, 300));
       return json({ error: "upstream_error" }, 502, origin);
     }
     console.error("letter api: unexpected error", error && error.name);
