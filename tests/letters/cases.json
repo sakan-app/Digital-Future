@@ -1,0 +1,137 @@
+[
+  {
+    "id": "01-jobcenter-mitwirkung",
+    "language": "ar",
+    "sender": "Jobcenter Musterstadt",
+    "expected": { "deadline": "2026-12-12", "sender_contains": ["jobcenter", "جوب"] },
+    "lines": [
+      "Betreff: Aufforderung zur Mitwirkung",
+      "Sehr geehrter Herr Beispiel,",
+      "zur Prüfung Ihres Anspruchs auf Bürgergeld benötigen wir",
+      "Ihre Gehaltsnachweise für September bis November 2026.",
+      "Bitte reichen Sie die Unterlagen bis zum 12.12.2026 ein.",
+      "Wenn Sie nicht mitwirken, kann die Leistung ganz oder",
+      "teilweise versagt werden (§ 66 SGB I)."
+    ]
+  },
+  {
+    "id": "02-auslaenderbehoerde-termin",
+    "language": "ar",
+    "sender": "Ausländerbehörde Musterstadt",
+    "expected": { "deadline": "2027-01-08", "sender_contains": ["ausländerbehörde", "auslaenderbehoerde", "أجانب"] },
+    "lines": [
+      "Betreff: Verlängerung Ihrer Aufenthaltserlaubnis",
+      "Sehr geehrte Frau Beispiel,",
+      "für die Verlängerung Ihrer Aufenthaltserlaubnis haben wir",
+      "einen Termin für Sie reserviert: 08.01.2027 um 09:30 Uhr.",
+      "Bitte bringen Sie mit: Reisepass, biometrisches Foto,",
+      "Mietvertrag und aktuelle Gehaltsnachweise."
+    ]
+  },
+  {
+    "id": "03-finanzamt-erinnerung",
+    "language": "en",
+    "sender": "Finanzamt Musterstadt",
+    "expected": { "deadline": "2027-01-15", "sender_contains": ["finanzamt", "tax"] },
+    "lines": [
+      "Betreff: Erinnerung an die Abgabe der Steuererklärung 2025",
+      "Sehr geehrter Herr Beispiel,",
+      "Ihre Einkommensteuererklärung für 2025 liegt uns noch nicht vor.",
+      "Bitte reichen Sie die Erklärung bis zum 15.01.2027 ein.",
+      "Andernfalls kann ein Verspätungszuschlag festgesetzt werden."
+    ]
+  },
+  {
+    "id": "04-vermieter-mieterhoehung",
+    "language": "tr",
+    "sender": "Muster Wohnbau GmbH",
+    "expected": { "deadline": "2027-01-31", "sender_contains": ["muster wohnbau", "wohnbau"] },
+    "lines": [
+      "Betreff: Mieterhöhung nach § 558 BGB",
+      "Sehr geehrte Frau Beispiel,",
+      "wir bitten um Ihre Zustimmung zur Erhöhung der Nettokaltmiete",
+      "von 620,00 EUR auf 680,00 EUR ab dem 01.03.2027.",
+      "Bitte erteilen Sie Ihre Zustimmung bis zum 31.01.2027."
+    ]
+  },
+  {
+    "id": "05-krankenkasse-einkommen",
+    "language": "en",
+    "sender": "Beispiel Krankenkasse",
+    "expected": { "deadline": "2026-12-20", "sender_contains": ["krankenkasse", "health"] },
+    "lines": [
+      "Betreff: Familienversicherung – Einkommensnachweis",
+      "Sehr geehrter Herr Beispiel,",
+      "für die Familienversicherung Ihrer Ehefrau benötigen wir",
+      "einen Nachweis über ihr aktuelles Einkommen.",
+      "Bitte senden Sie uns den Fragebogen bis zum 20.12.2026 zurück."
+    ]
+  },
+  {
+    "id": "06-familienkasse-schulbescheinigung",
+    "language": "ar",
+    "sender": "Familienkasse Musterstadt",
+    "expected": { "deadline": "2027-01-10", "sender_contains": ["familienkasse", "عائل"] },
+    "lines": [
+      "Betreff: Kindergeld für Ihr Kind Lina Beispiel",
+      "Sehr geehrte Frau Beispiel,",
+      "damit wir das Kindergeld weiter zahlen können, benötigen wir",
+      "eine aktuelle Schulbescheinigung.",
+      "Bitte reichen Sie diese bis zum 10.01.2027 ein."
+    ]
+  },
+  {
+    "id": "07-rundfunkbeitrag-zahlung",
+    "language": "de",
+    "sender": "Beitragsservice (Beispiel)",
+    "expected": { "deadline": "2026-12-15", "sender_contains": ["beitragsservice", "rundfunk"] },
+    "lines": [
+      "Betreff: Zahlungserinnerung Rundfunkbeitrag",
+      "Sehr geehrter Herr Beispiel,",
+      "für den Zeitraum Oktober bis Dezember 2026 ist ein Betrag",
+      "von 55,08 EUR offen.",
+      "Bitte überweisen Sie den Betrag bis zum 15.12.2026."
+    ]
+  },
+  {
+    "id": "08-bibliothek-info-no-deadline",
+    "language": "en",
+    "sender": "Stadtbibliothek Musterstadt",
+    "expected": { "deadline": null, "sender_contains": ["bibliothek", "library"] },
+    "lines": [
+      "Betreff: Ihr neuer Bibliotheksausweis",
+      "Sehr geehrte Frau Beispiel,",
+      "Ihr Bibliotheksausweis ist fertig.",
+      "Sie können ihn während unserer Öffnungszeiten abholen.",
+      "Wir freuen uns auf Ihren Besuch."
+    ]
+  },
+  {
+    "id": "09-arbeitsagentur-einladung",
+    "language": "ar",
+    "sender": "Agentur für Arbeit Musterstadt",
+    "expected": { "deadline": "2026-12-09", "sender_contains": ["agentur für arbeit", "arbeitsagentur", "وكالة"] },
+    "lines": [
+      "Betreff: Einladung zu einem Beratungsgespräch",
+      "Sehr geehrter Herr Beispiel,",
+      "bitte kommen Sie am 09.12.2026 um 10:30 Uhr in Zimmer 214.",
+      "Bringen Sie Ihren Lebenslauf und Ihren Ausweis mit.",
+      "Wenn Sie ohne wichtigen Grund nicht erscheinen, kann eine",
+      "Minderung eintreten."
+    ]
+  },
+  {
+    "id": "10-mahnung-onlineshop",
+    "language": "tr",
+    "sender": "Beispiel Versand GmbH",
+    "expected": { "deadline": "2026-12-18", "sender_contains": ["beispiel versand", "versand"] },
+    "lines": [
+      "Betreff: 2. Mahnung – Rechnung Nr. 2026-4471",
+      "Sehr geehrte Frau Beispiel,",
+      "leider haben wir für Ihre Bestellung vom 02.11.2026",
+      "noch keine Zahlung erhalten. Offener Betrag: 89,90 EUR",
+      "zuzüglich 5,00 EUR Mahngebühr.",
+      "Bitte zahlen Sie bis spätestens 18.12.2026."
+    ]
+  }
+]
