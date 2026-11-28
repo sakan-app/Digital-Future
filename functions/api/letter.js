@@ -1,6 +1,6 @@
 // Letter helper API (Cloudflare Pages Function): POST /api/letter
 // Body: { language: "ar" | "en" | "de" | "tr", files: [{ media_type, data }] } where data is base64 without a data: prefix.
-// Letters are sent to Claude and never stored or logged.
+// Letters are sent to Claude and never stored or logged. Usage is capped per visitor and per day (KV binding LETTER_LIMITS).
 import Anthropic from "@anthropic-ai/sdk";
 
 const MODEL = "claude-opus-5-5";
@@ -13,6 +13,33 @@ const ALLOWED_ORIGINS = [
   /^https:\/\/([a-z0-9-]+\.)?digital-future\.pages\.dev$/,
   /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/,
 ];
+
+const DEFAULT_LIMIT_PER_VISITOR = 3;
+const DEFAULT_LIMIT_PER_DAY = 50;
+const COUNTER_TTL = { expirationTtl: 2 * 24 * 60 * 60 };
+
+// The visitor key is a hash of the IP salted with the day, so no IP is stored and days can't be linked.
+async function visitorHash(ip, day) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`${day}:${ip}`));
+  return [...new Uint8Array(digest)].slice(0, 16).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+// Counts are approximate (KV is eventually consistent), which is enough for a cost cap.
+async function takeQuota(env, request) {
+  const day = new Date().toISOString().slice(0, 10);
+  const perVisitor = Number(env.LETTER_LIMIT_PER_VISITOR) || DEFAULT_LIMIT_PER_VISITOR;
+  const perDay = Number(env.LETTER_LIMIT_PER_DAY) || DEFAULT_LIMIT_PER_DAY;
+  const visitorKey = `visitor:${day}:${await visitorHash(request.headers.get("CF-Connecting-IP") || "unknown", day)}`;
+  const dayKey = `day:${day}`;
+  const [visitorUsed, dayUsed] = (await Promise.all([env.LETTER_LIMITS.get(visitorKey), env.LETTER_LIMITS.get(dayKey)])).map((value) => Number(value) || 0);
+  if (dayUsed >= perDay) return "daily_limit_reached";
+  if (visitorUsed >= perVisitor) return "limit_reached";
+  await Promise.all([
+    env.LETTER_LIMITS.put(visitorKey, String(visitorUsed + 1), COUNTER_TTL),
+    env.LETTER_LIMITS.put(dayKey, String(dayUsed + 1), COUNTER_TTL),
+  ]);
+  return null;
+}
 
 const RESULT_SCHEMA = {
   type: "object",
@@ -82,6 +109,8 @@ export async function onRequestPost({ request, env }) {
   if (!origin) return json({ error: "origin_not_allowed" }, 403);
   // Off until the owner sets LETTER_API_ENABLED=true and ANTHROPIC_API_KEY in Cloudflare.
   if (env.LETTER_API_ENABLED !== "true" || !env.ANTHROPIC_API_KEY) return json({ error: "not_enabled" }, 503, origin);
+  // Fail closed: without the LETTER_LIMITS KV binding there is no cost cap, so the API stays off.
+  if (!env.LETTER_LIMITS) return json({ error: "not_configured" }, 503, origin);
 
   let body;
   try {
@@ -110,6 +139,9 @@ export async function onRequestPost({ request, env }) {
   }
   if (total > MAX_TOTAL_BASE64) return json({ error: "files_too_large" }, 413, origin);
   content.push({ type: "text", text: `Reader's language: ${LANGUAGES[language]}. Explain this letter.` });
+
+  const limited = await takeQuota(env, request);
+  if (limited) return json({ error: limited }, 429, origin);
 
   const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
   try {
